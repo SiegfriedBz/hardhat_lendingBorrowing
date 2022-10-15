@@ -161,7 +161,7 @@ contract LendingBorrowing {
     return borrowerToLoans[msg.sender].length;
   }
 
-  function getDueDebtForLoan(uint256 _loanId) public view returns(uint256) {
+  function getBorrowerDueDebtForLoan(uint256 _loanId) public view returns(uint256) {
     return borrowerToLoans[msg.sender][_loanId].debt;
   }
 }
