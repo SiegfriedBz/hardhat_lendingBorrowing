@@ -129,7 +129,7 @@ contract LendingBorrowing {
         }
         for (uint256 i = 0; i < lenders.length; i++) {
             // send each lender balance
-            (bool success, ) = lenders[i].call{
+            (bool success, ) = payable(lenders[i]).call{
                 value: lenderToBalance[lenders[i]]
             }("");
             // initialize each lender's balance
