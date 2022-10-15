@@ -71,7 +71,7 @@ contract LendingBorrowing {
             revert NotEnoughFunds();
         }
         // revert if borrower has already 2 loans
-        if (borrowerToLoans[msg.sender].length >= 2) {
+        if (getBorrowerActiveLoansNumber() >= 2) {
             revert Max2LoansAllowed();
         }
         // calculate debt with interest
@@ -165,11 +165,17 @@ contract LendingBorrowing {
         return (debtToLender, debtWithInterestToLender);
     }
 
-    function getBorrowerDueDebtForLoan(uint256 _loanId)
-        public
-        view
-        returns (uint256)
-    {
+    function getDueDebtForLoan(uint256 _loanId) public view returns (uint256) {
         return borrowerToLoans[msg.sender][_loanId].debt;
+    }
+
+    function getBorrowerActiveLoansNumber() public view returns (uint8) {
+        uint8 counter;
+        for (uint8 i = 0; i < borrowerToLoans[msg.sender].length; i++) {
+            if (borrowerToLoans[msg.sender][i].debt != 0) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }
