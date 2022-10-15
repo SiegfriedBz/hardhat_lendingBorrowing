@@ -24,9 +24,9 @@ contract LendingBorrowing {
 
     struct Loan {
         uint256 id;
-        uint256 debt; // with interest
+        uint256 debt; // w/ interest
         address borrower;
-        mapping(address => uint256) lenderToDebt;
+        mapping(address => uint256) lenderToDebt; // due debt w/interest for each lender
     }
 
     modifier onlyLender() {
@@ -65,17 +65,17 @@ contract LendingBorrowing {
         lenderToBalance[msg.sender] += msg.value;
     }
 
-    function borrrow(uint256 _amount) public payable {
+    function borrow(uint256 _amount) public payable {
         // revert if not enough ETH on contract
         if (address(this).balance < _amount) {
             revert NotEnoughFunds();
         }
         // revert if borrower has already 2 loans
-        if (getBorrowerActiveLoansNumber() >= 2) {
+        if (getBorrowerActiveLoansNumber(msg.sender) >= 2) {
             revert Max2LoansAllowed();
         }
         // calculate debt with interest
-        uint256 totalDebt = calculateDebt(_amount);
+        uint256 totalDebt = calculateTotalDebt(_amount);
         // create Loan
         activeLoanCounter++;
         uint256 borrowerLoansCounter = borrowerToLoans[msg.sender].length;
@@ -140,42 +140,50 @@ contract LendingBorrowing {
         lenders = new address[](0);
     }
 
-    function getContractBalance() external view returns (uint256) {
-        return address(this).balance;
-    }
-
-    function getNumberOfLenders() external view returns (uint256) {
-        return lenders.length;
-    }
-
-    function calculateDebt(uint256 _amount) internal view returns (uint256) {
-        uint256 _interest = (_amount * i_interestRate) / 10**18;
-        return _amount + _interest;
+    function calculateTotalDebt(uint256 _totalAmountBorrowed)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 _interest = (_totalAmountBorrowed * i_interestRate) / 10**18;
+        return _totalAmountBorrowed + _interest;
     }
 
     function calculateLenderData(
         address _lender,
-        uint256 _amount,
+        uint256 _totalAmountBorrowed,
         uint256 _totalDebt
     ) internal view returns (uint256, uint256) {
-        uint256 ratio = (lenderToBalance[_lender] * 10**2) /
+        uint256 fundingRatio = (lenderToBalance[_lender] * 10**2) /
             address(this).balance;
-        uint256 debtToLender = (_amount * ratio) / 10**2;
-        uint256 debtWithInterestToLender = (_totalDebt * ratio) / 10**2;
+        uint256 debtToLender = (_totalAmountBorrowed * fundingRatio) / 10**2;
+        uint256 debtWithInterestToLender = (_totalDebt * fundingRatio) / 10**2;
         return (debtToLender, debtWithInterestToLender);
     }
 
-    function getDueDebtForLoan(uint256 _loanId) public view returns (uint256) {
-        return borrowerToLoans[msg.sender][_loanId].debt;
+    function getBorrowerLoanDueDebt(address _borrower, uint256 _loanId)
+        public
+        view
+        returns (uint256)
+    {
+        return borrowerToLoans[_borrower][_loanId].debt;
     }
 
-    function getBorrowerActiveLoansNumber() public view returns (uint8) {
+    function getBorrowerActiveLoansNumber(address _borrower)
+        public
+        view
+        returns (uint8)
+    {
         uint8 counter;
-        for (uint8 i = 0; i < borrowerToLoans[msg.sender].length; i++) {
-            if (borrowerToLoans[msg.sender][i].debt != 0) {
+        for (uint8 i = 0; i < borrowerToLoans[_borrower].length; i++) {
+            if (borrowerToLoans[_borrower][i].debt != 0) {
                 counter++;
             }
         }
         return counter;
+    }
+
+    function getNumberOfLenders() external view returns (uint256) {
+        return lenders.length;
     }
 }
