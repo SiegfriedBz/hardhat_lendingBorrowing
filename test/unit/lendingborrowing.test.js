@@ -1,4 +1,4 @@
-const { deployments, ethers } = require("hardhat")
+const { deployments, getNamedAccounts, ethers } = require("hardhat")
 const { INTEREST_RATE } = require("../../helper-hardhat-config")
 const { expect } = require("chai")
 const { solidity } = require("ethereum-waffle")
@@ -11,6 +11,7 @@ describe("LendingBorrowing", function () {
   let amountToBorrow = ethers.utils.parseEther("0.5")
 
   beforeEach(async function () {
+    // Initial : get Signers and deploy contract
     ;[deployer, user01, user02, user03] = await ethers.getSigners()
     await deployments.fixture(["all"])
     contract = await ethers.getContract('LendingBorrowing', deployer)
@@ -34,22 +35,22 @@ describe("LendingBorrowing", function () {
         let contract_InitialBalance = await ethers.provider.getBalance(
           contract.address
         )
+        // set up : deployer deposits funds
         let transactionResponse = await contract.lend({ value: amountToFund })
         await transactionResponse.wait(1)
         let deployer_ContractBalance = await contract.lenderToBalance(
           deployer.address
         )
-        let contract_Balance_Init = await ethers.provider.getBalance(contract.address)
+        let contract_Balance = await ethers.provider.getBalance(contract.address)
         // assert
         expect(contract_InitialBalance.toString()).to.equal("0")
         expect(deployer_ContractBalance.toString())
-        .to.equal(contract_Balance_Init.toString())
+        .to.equal(contract_Balance.toString())
       })
 
       it("allows to add the funder to the lenders array", async function () {
-        // initial : lenders array is expected to be empty
+        // set up : lenders array is expected to be empty
         await expect(contract.lenders(0)).to.be.reverted
-
         // act : deployer lends ETH
         await contract.lend({ value: amountToFund })
         // assert
@@ -68,6 +69,7 @@ describe("LendingBorrowing", function () {
     let activeLoanCounter_Init
 
     beforeEach(async function() {
+      // set up : deployer lends ETH
       await contract.lend({value: amountToFund})
       activeLoanCounter_Init = await contract.totalActiveLoanCounter()
     })
@@ -76,7 +78,7 @@ describe("LendingBorrowing", function () {
       describe('with an amount to borrow < contract balance', async function() {
 
         it("allows to track correctly the number of total active Loans", async function() {
-          // act : user01 borrowing
+          // set up : user01 borrows
           await contract.connect(user01).borrow(amountToBorrow)
           // assert
           let activeLoanCounter_Final = await contract.totalActiveLoanCounter()
@@ -84,19 +86,19 @@ describe("LendingBorrowing", function () {
         })
 
         it ('allows to set correctly the borrower debt', async function() {
-          // act : user01 borrowing
+          // set up : user01 borrows
           await contract.connect(user01).borrow(amountToBorrow)
           // assert
           let user01_Debt = await contract.getBorrowerLoanDueDebt(user01.address, 0) // function getBorrowerLoanDueDebt(address _borrower, uint256 _loanId)
-          let expectedUser01Debt = amountToBorrow
+          let user01_ExpectedDebt = amountToBorrow
           .add(amountToBorrow
             .mul(INTEREST_RATE)
             .div(ethers.utils.parseEther("1")))
-          expect(user01_Debt).to.equal(expectedUser01Debt)
+          expect(user01_Debt).to.equal(user01_ExpectedDebt)
         })
 
         it ('allows to update all (lenders and borrower) balances', async function() {
-          // set up : deployer lending 1ETH + user01 lending 2ETH
+          // set up : deployer lends 1ETH + user01 lends 2ETH
           await contract.connect(user01).lend({value: amountToFund.mul(2)})
           let numberOfLenders = await contract.getNumberOfLenders()
           let contract_Balance_Init = await ethers.provider.getBalance(contract.address)
@@ -106,17 +108,17 @@ describe("LendingBorrowing", function () {
           let user01_ContractBalance_Init = await contract.lenderToBalance(
             user01.address
           )
-          // assert set up
+          // assert
           expect(numberOfLenders.toString()).to.equal("2")
           expect(contract_Balance_Init).to.equal(amountToFund.mul(3))
           expect(deployer_ContractBalance_Init).to.equal(amountToFund)
           expect(user01_ContractBalance_Init).to.equal(amountToFund.mul(2))
 
-          // act : user02 borrowing
+          // act : user02 borrows
           await contract.connect(user02).borrow(amountToBorrow)
           let user02_Debt = await contract.getBorrowerLoanDueDebt(user02.address, 0)
 
-          // calculate each lender expected amount borrowed
+          // calculate each lender's expected borrowed amount
           let deployer_ExpectedAmountBorrowed = amountToBorrow
           .mul(deployer_ContractBalance_Init)
           .div(contract_Balance_Init)
@@ -124,7 +126,7 @@ describe("LendingBorrowing", function () {
           .mul(user01_ContractBalance_Init)
           .div(contract_Balance_Init)
 
-          // assert lenders amount borrowed
+          // assert lenders' amount borrowed
           let deployer_ContractBalance = await contract.lenderToBalance(
             deployer.address
           )
@@ -144,7 +146,7 @@ describe("LendingBorrowing", function () {
           .mul(user01_ContractBalance_Init)
           .div(contract_Balance_Init)
 
-          // assert each lender due debt
+          // assert each lender's due debt
           let deployer_DebtWithInterest = await contract.getBorrowerLoanDueDebtToLender(
             user02.address, // borrower
             0, // loanId
@@ -158,14 +160,15 @@ describe("LendingBorrowing", function () {
         })
 
         it ('allows to send the correct value to the borrower', async function() {
-          let user01_InitialBalance = await ethers.provider.getBalance(user01.address)
-          let user01ConnectedContract = await contract.connect(user01)
-          let transactionResponse = await user01ConnectedContract.borrow(amountToBorrow)
+          let user01_Balance_Init = await ethers.provider.getBalance(user01.address)
+          // act : user01 borrows
+          let transactionResponse = await contract.connect(user01).borrow(amountToBorrow)
           let transactionReceipt = await transactionResponse.wait(1)
           let { gasUsed, effectiveGasPrice } = transactionReceipt
           let gasCost = gasUsed.mul(effectiveGasPrice)
+          // assert
           let user01_Balance = await ethers.provider.getBalance(user01.address)
-          expect(user01_Balance).to.equal(user01_InitialBalance.add(amountToBorrow).sub(gasCost))
+          expect(user01_Balance).to.equal(user01_Balance_Init.add(amountToBorrow).sub(gasCost))
         })
       })
     })
@@ -183,8 +186,10 @@ describe("LendingBorrowing", function () {
 
       it('prevents to create a 3rd loan and reverts with the correct custom code', async function() {
         let amountToBorrow = amountToFund.div(10)
+        // set up : user01 borrows 2 times in a row
         await contract.connect(user01).borrow(amountToBorrow)
         await contract.connect(user01).borrow(amountToBorrow)
+        // assert
         await expect(contract.connect(user01).borrow(amountToBorrow))
         .to.be.revertedWithCustomError(contract,'Max2LoansAllowed')
       })
@@ -197,11 +202,10 @@ describe("LendingBorrowing", function () {
     let activeLoanCounter_Init
 
     beforeEach(async function() {
-      // deployer sends 1ETH to contract
+      // set up : user01 lends 1ETH + user02 lends 2ETH
       await contract.lend({value: amountToFund})
-      // user01 sends 2ETH to contract
       await contract.connect(user01).lend({value: amountToFund.mul(2)})
-      // user02 borrows 0.1ETH
+      // set up : user02 borrows 0.1ETH
       amountToBorrow = amountToFund.div(10)
       await contract.connect(user02).borrow(amountToBorrow)
       user02_Debt = await contract.getBorrowerLoanDueDebt(user02.address, 0)
@@ -212,7 +216,7 @@ describe("LendingBorrowing", function () {
       describe('when paying the loan with the correct amount', async function() {
 
         it("allows to track correctly the number of total active Loans", async function() {
-          // user02 pays the loan with the correct amount
+          // act : user02 pays the loan with the correct amount
           contract.connect(user02).payloan(0, {value: user02_Debt})
           // assert
           let activeLoanCounter_Final = await contract.totalActiveLoanCounter()
@@ -220,14 +224,16 @@ describe("LendingBorrowing", function () {
         })
 
         it("allows to set the debt to 0", async function() {
+          // check : user02 debt is > 0
           expect(await contract.connect(user02).getBorrowerLoanDueDebt(user02.address, 0)).to.equal(user02_Debt)
-          // user02 pays the loan with the correct amount
+          // act : user02 pays the loan with the correct amount
           contract.connect(user02).payloan(0, {value: user02_Debt})
+          // assert : user02 debt is 0
           expect(await contract.connect(user02).getBorrowerLoanDueDebt(user02.address, 0)).to.equal(0)
         })
 
         it("allows to send to each lender the correct due amount", async function() {
-          // get initial balances for contract, deployer and user01 (lenders) and user03(not a lender)
+          // set up : get initial balances for contract, deployer and user01 (lenders); and user03(not a lender)
           /// initial balances in contract used to calculate expected debt
           let contract_Balance_Init = await ethers.provider.getBalance(contract.address)
           let deployer_ContractBalance_Init = await contract.lenderToBalance(deployer.address) // lender 1ETH
@@ -246,7 +252,7 @@ describe("LendingBorrowing", function () {
           .mul(user01_ContractBalance_Init)
           .div(contract_Balance_Init)
 
-          // user02 pays the loan with the correct amount
+          // act : user02 pays the loan with the correct amount
           let transactionResponse = await contract.connect(user02).payloan(0, {value: user02_Debt})
           let transactionReceipt = await transactionResponse.wait(1)
           let { gasUsed, effectiveGasPrice } = transactionReceipt
@@ -289,9 +295,8 @@ describe("LendingBorrowing", function () {
     let deployer_ContractBalance_Init, user01_ContractBalance_Init
     let deployer_Balance_Init, user01_Balance_Init
     beforeEach(async function() {
-      // deployer sends 1ETH to contract
+      // set up : deployer sends 1ETH to contract + user01 sends 2ETH to contract
       await contract.lend({value: amountToFund})
-      // user01 sends 2ETH to contract
       await contract.connect(user01).lend({value: amountToFund.mul(2)})
       // get initial balances for contract, deployer and user01 (lenders)
       /// initial balances in contract
@@ -303,8 +308,8 @@ describe("LendingBorrowing", function () {
     })
 
     describe("happy path", async function() {
-        it("allows a lender to withdraw funds", async function() {
-          // user01 calls the withdraw function
+        it("allows a lender to trigger all lenders' funds withdrawal", async function() {
+          // act : user01 calls the withdraw function
           let transactionResponse = await contract.connect(user01).withdraw()
           let transactionReceipt = await transactionResponse.wait(1)
           let { gasUsed, effectiveGasPrice } = transactionReceipt
@@ -324,8 +329,9 @@ describe("LendingBorrowing", function () {
         it("allows to initialize the lenders array", async function() {
           // 2 lenders lend 1ETH and 2ETH respectively
           expect(await contract.getNumberOfLenders()).to.equal(2)
-          // user01 calls the withdraw function
+          // act : user01 calls the withdraw function
           await contract.connect(user01).withdraw()
+          // assert number of lenders is 0
           expect(await contract.getNumberOfLenders()).to.equal(0)
         })
       })
@@ -340,4 +346,5 @@ describe("LendingBorrowing", function () {
       })
     })
   })
+
 })
