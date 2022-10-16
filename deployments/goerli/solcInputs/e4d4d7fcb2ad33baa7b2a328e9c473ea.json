@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/LendingBorrowing.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.9;\n\nerror InterestRateOutOfRange();\nerror Unauthorized();\nerror NotEnoughFunds();\nerror AmountSentCanNotBeNull();\nerror Max2LoansAllowed();\nerror LoanMustExist();\nerror TotalLoanMustBePaid();\n\n/** @title LendingBorrowing : contract for lending&borrowing ETH.\n *  @author SiegfriedBz\n *  @notice This contract allows lenders to receive interests on loans, as a function of each lender balance at the time a loan is created.\n *  @notice This contract allows borrowers to create a max of 2 active loans at a given time.\n */\ncontract LendingBorrowing {\n    uint256 public immutable i_interestRate;\n    uint256 public activeLoanCounter;\n    address payable public immutable i_owner;\n    address[] public lenders;\n    mapping(address => uint256) public lenderToBalance;\n    mapping(address => Loan[]) public borrowerToLoans;\n\n    struct Loan {\n        uint256 id;\n        uint256 debt; // with interest\n        address borrower;\n        mapping(address => uint256) lenderToDebt;\n    }\n\n    modifier onlyLender() {\n        if (lenderToBalance[msg.sender] == 0) {\n            revert Unauthorized();\n        }\n        _;\n    }\n\n    constructor(uint256 _interestRate) {\n        if (_interestRate == 0 || _interestRate >= 10**18) {\n            // interestRate must be ]0,1[\n            revert InterestRateOutOfRange();\n        }\n        i_owner = payable(msg.sender);\n        i_interestRate = _interestRate;\n    }\n\n    receive() external payable {\n        lend();\n    }\n\n    fallback() external payable {\n        lend();\n    }\n\n    function lend() public payable {\n        if (msg.value == 0) {\n            revert AmountSentCanNotBeNull();\n        }\n        if (lenderToBalance[msg.sender] == 0) {\n            // create new lender\n            lenders.push(msg.sender);\n        }\n        // update lender's balance\n        lenderToBalance[msg.sender] += msg.value;\n    }\n\n    function borrrow(uint256 _amount) public payable {\n        // revert if not enough ETH on contract\n        if (address(this).balance < _amount) {\n            revert NotEnoughFunds();\n        }\n        // revert if borrower has already 2 loans\n        if (getBorrowerActiveLoansNumber() >= 2) {\n            revert Max2LoansAllowed();\n        }\n        // calculate debt with interest\n        uint256 totalDebt = calculateDebt(_amount);\n        // create Loan\n        activeLoanCounter++;\n        uint256 borrowerLoansCounter = borrowerToLoans[msg.sender].length;\n        Loan[] storage borrowerLoans = borrowerToLoans[msg.sender];\n        borrowerLoans.push();\n        borrowerLoans[borrowerLoansCounter].id = borrowerLoansCounter;\n        borrowerLoans[borrowerLoansCounter].debt = totalDebt;\n        borrowerLoans[borrowerLoansCounter].borrower = msg.sender;\n        // update lenders' data\n        for (uint256 i = 0; i < lenders.length; i++) {\n            (\n                uint256 debtToLender,\n                uint256 debtWithInterestToLender\n            ) = calculateLenderData(lenders[i], _amount, totalDebt);\n            lenderToBalance[lenders[i]] -= debtToLender;\n            borrowerLoans[borrowerLoansCounter].lenderToDebt[\n                    lenders[i]\n                ] = debtWithInterestToLender;\n        }\n        // send ETH to borrower\n        (bool success, ) = payable(msg.sender).call{value: _amount}(\"\");\n        require(success);\n    }\n\n    function payloan(uint8 _id) public payable {\n        // loan must exist\n        if (borrowerToLoans[msg.sender].length < _id + 1) {\n            revert LoanMustExist();\n        }\n        // must sent enough ETH to cover total debt\n        Loan storage targetLoan = borrowerToLoans[msg.sender][_id];\n        if (msg.value != targetLoan.debt) {\n            revert TotalLoanMustBePaid();\n        }\n        // send due debt to each lender\n        for (uint256 i = 0; i < lenders.length; i++) {\n            uint256 dueDebt = targetLoan.lenderToDebt[lenders[i]];\n            if (dueDebt != 0) {\n                (bool success, ) = payable(lenders[i]).call{value: dueDebt}(\"\");\n                require(success);\n            }\n        }\n        // delete borrower this Loan\n        activeLoanCounter--;\n        delete borrowerToLoans[msg.sender][_id];\n    }\n\n    function withdraw() external payable onlyLender {\n        if (address(this).balance == 0) {\n            revert NotEnoughFunds();\n        }\n        for (uint256 i = 0; i < lenders.length; i++) {\n            // send each lender balance\n            (bool success, ) = payable(lenders[i]).call{\n                value: lenderToBalance[lenders[i]]\n            }(\"\");\n            // initialize each lender's balance\n            lenderToBalance[lenders[i]] = 0;\n            require(success);\n        }\n        // initialize lenders' array\n        lenders = new address[](0);\n    }\n\n    function getContractBalance() external view returns (uint256) {\n        return address(this).balance;\n    }\n\n    function getNumberOfLenders() external view returns (uint256) {\n        return lenders.length;\n    }\n\n    function calculateDebt(uint256 _amount) internal view returns (uint256) {\n        uint256 _interest = (_amount * i_interestRate) / 10**18;\n        return _amount + _interest;\n    }\n\n    function calculateLenderData(\n        address _lender,\n        uint256 _amount,\n        uint256 _totalDebt\n    ) internal view returns (uint256, uint256) {\n        uint256 ratio = (lenderToBalance[_lender] * 10**2) /\n            address(this).balance;\n        uint256 debtToLender = (_amount * ratio) / 10**2;\n        uint256 debtWithInterestToLender = (_totalDebt * ratio) / 10**2;\n        return (debtToLender, debtWithInterestToLender);\n    }\n\n    function getDueDebtForLoan(uint256 _loanId) public view returns (uint256) {\n        return borrowerToLoans[msg.sender][_loanId].debt;\n    }\n\n    function getBorrowerActiveLoansNumber() public view returns (uint8) {\n        uint8 counter;\n        for (uint8 i = 0; i < borrowerToLoans[msg.sender].length; i++) {\n            if (borrowerToLoans[msg.sender][i].debt != 0) {\n                counter++;\n            }\n        }\n        return counter;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

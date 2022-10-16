@@ -1,0 +1,475 @@
+{
+  "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_interestRate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AmountSentCanNotBeNull",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ContractBalanceIsNull",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InterestRateOutOfRange",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "LoanMustExist",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Max2LoansAllowed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotEnoughFundsInContract",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TotalLoanMustBePaid",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "borrow",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "borrowerToLoans",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "debt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        }
+      ],
+      "name": "getBorrowerActiveLoansNumber",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getBorrowerLoanDueDebt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_loanId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_lender",
+          "type": "address"
+        }
+      ],
+      "name": "getBorrowerLoanDueDebtToLender",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getNumberOfLenders",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "i_interestRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "i_owner",
+      "outputs": [
+        {
+          "internalType": "address payable",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "lend",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "lenderToBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "lenders",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_id",
+          "type": "uint8"
+        }
+      ],
+      "name": "payloan",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalActiveLoanCounter",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "transactionHash": "0xc09fef46da73c197572673cd98cd61c6219740a2938c4ea837e52f426382ebc3",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "transactionIndex": 0,
+    "gasUsed": "1527732",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x1b1899202db454bcb7cb609bafc0eef53cad81680707609baf3ac9a4ece9e1a5",
+    "transactionHash": "0xc09fef46da73c197572673cd98cd61c6219740a2938c4ea837e52f426382ebc3",
+    "logs": [],
+    "blockNumber": 1,
+    "cumulativeGasUsed": "1527732",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "25000000000000000"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "64a48335f94f4a0d791f442954b01e2a",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_interestRate\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AmountSentCanNotBeNull\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ContractBalanceIsNull\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InterestRateOutOfRange\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LoanMustExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Max2LoansAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotEnoughFundsInContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TotalLoanMustBePaid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Unauthorized\",\"type\":\"error\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"borrow\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"borrowerToLoans\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"debt\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_borrower\",\"type\":\"address\"}],\"name\":\"getBorrowerActiveLoansNumber\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_borrower\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_loanId\",\"type\":\"uint256\"}],\"name\":\"getBorrowerLoanDueDebt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_borrower\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_loanId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_lender\",\"type\":\"address\"}],\"name\":\"getBorrowerLoanDueDebtToLender\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNumberOfLenders\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"i_interestRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"i_owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lend\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lenderToBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lenders\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_id\",\"type\":\"uint8\"}],\"name\":\"payloan\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalActiveLoanCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"author\":\"SiegfriedBz\",\"kind\":\"dev\",\"methods\":{},\"title\":\"LendingBorrowing : contract for lending&borrowing ETH\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"borrow(uint256)\":{\"notice\":\"borrow ETH from the contract creates a new loan calculates the total debt for this loan calculates the debt for each lender for this loan\"},\"getBorrowerActiveLoansNumber(address)\":{\"notice\":\"Getters returns the number of active loans for a given borrower\"},\"getBorrowerLoanDueDebt(address,uint256)\":{\"notice\":\"Getters for front end returns the total due debt with interest for a given borrower - loan\"},\"getBorrowerLoanDueDebtToLender(address,uint256,address)\":{\"notice\":\"Getters for front end returns the lender's due debt with interest for a given borrower - loan - lender\"},\"getNumberOfLenders()\":{\"notice\":\"Getters for front end returns the total number of lenders\"},\"lend()\":{\"notice\":\"lend ETH to the contract\"},\"payloan(uint8)\":{\"notice\":\"repay a loan : send ETH due debt to each lender\"},\"withdraw()\":{\"notice\":\"allows a lender to withdraw all ETH from the contract sends each ETH lender's balance to each lender\"}},\"notice\":\"This contract allows lenders to receive interests on loans, as a function of each lender balance/contract balance at the time a loan is createdThis contract allows borrowers to create a max of 2 active loans at a given time\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/LendingBorrowing.sol\":\"LendingBorrowing\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/LendingBorrowing.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.9;\\n\\nerror Unauthorized();\\nerror InterestRateOutOfRange();\\nerror AmountSentCanNotBeNull();\\nerror NotEnoughFundsInContract();\\nerror Max2LoansAllowed();\\nerror LoanMustExist();\\nerror TotalLoanMustBePaid();\\nerror ContractBalanceIsNull();\\n\\n/** @title LendingBorrowing : contract for lending&borrowing ETH\\n *  @author SiegfriedBz\\n *  @notice This contract allows lenders to receive interests on loans, as a function of each lender balance/contract balance at the time a loan is created\\n *  @notice This contract allows borrowers to create a max of 2 active loans at a given time\\n */\\ncontract LendingBorrowing {\\n    uint256 public immutable i_interestRate;\\n    uint256 public totalActiveLoanCounter;\\n    address payable public immutable i_owner;\\n    address[] public lenders;\\n    mapping(address => uint256) public lenderToBalance;\\n    mapping(address => Loan[]) public borrowerToLoans;\\n    struct Loan {\\n        uint256 id;\\n        uint256 debt; // with interest\\n        address borrower;\\n        mapping(address => uint256) lenderToDebt; // due debt with interest for each lender\\n    }\\n\\n    modifier onlyLender() {\\n        if (lenderToBalance[msg.sender] == 0) {\\n            revert Unauthorized();\\n        }\\n        _;\\n    }\\n\\n    constructor(uint256 _interestRate) {\\n        if (_interestRate == 0 || _interestRate >= 10**18) {\\n            /// interestRate must be ]0,1[\\n            revert InterestRateOutOfRange();\\n        }\\n        i_owner = payable(msg.sender);\\n        i_interestRate = _interestRate;\\n    }\\n\\n    /// fallback functions\\n    receive() external payable {\\n        lend();\\n    }\\n\\n    fallback() external payable {\\n        lend();\\n    }\\n\\n    /**\\n     * @notice lend ETH to the contract\\n     */\\n    function lend() public payable {\\n        if (msg.value == 0) {\\n            revert AmountSentCanNotBeNull();\\n        }\\n        /// add new lender if not already in lenders array\\n        if (lenderToBalance[msg.sender] == 0) {\\n            lenders.push(msg.sender);\\n        }\\n        /// update lender's balance\\n        lenderToBalance[msg.sender] += msg.value;\\n    }\\n\\n    /**\\n     * @notice borrow ETH from the contract\\n     * creates a new loan\\n     * calculates the total debt for this loan\\n     * calculates the debt for each lender for this loan\\n     */\\n    function borrow(uint256 _amount) external payable {\\n        /// revert if not enough ETH on contract\\n        if (address(this).balance < _amount) {\\n            revert NotEnoughFundsInContract();\\n        }\\n        /// revert if borrower has already 2 loans\\n        if (getBorrowerActiveLoansNumber(msg.sender) >= 2) {\\n            revert Max2LoansAllowed();\\n        }\\n        /// calculate debt with interest for this amount\\n        uint256 debtWithInterest = calculateDebtWithInterest(_amount);\\n        /// create Loan\\n        totalActiveLoanCounter++;\\n        uint256 borrowerLoanIndex = borrowerToLoans[msg.sender].length;\\n        Loan[] storage borrowerLoans = borrowerToLoans[msg.sender];\\n        borrowerLoans.push();\\n        /// update Loan\\n        borrowerLoans[borrowerLoanIndex].id = borrowerLoanIndex;\\n        borrowerLoans[borrowerLoanIndex].debt = debtWithInterest;\\n        borrowerLoans[borrowerLoanIndex].borrower = msg.sender;\\n        /// update each lender's data\\n        for (uint256 i = 0; i < lenders.length; i++) {\\n            (\\n                uint256 borrowedToLender,\\n                uint256 debtWithInterestToLender\\n            ) = calculateLenderData(lenders[i], _amount, debtWithInterest);\\n            /// update each lender's balance\\n            lenderToBalance[lenders[i]] -= borrowedToLender;\\n            /// update borrower's debt (with interest) to each lender\\n            borrowerLoans[borrowerLoanIndex].lenderToDebt[\\n                    lenders[i]\\n                ] = debtWithInterestToLender;\\n        }\\n        /// send ETH to borrower\\n        (bool success, ) = payable(msg.sender).call{value: _amount}(\\\"\\\");\\n        require(success);\\n    }\\n\\n    /**\\n     * @notice repay a loan : send ETH due debt to each lender\\n     */\\n    function payloan(uint8 _id) external payable {\\n        /// loan must exist\\n        if (borrowerToLoans[msg.sender].length < _id + 1) {\\n            revert LoanMustExist();\\n        }\\n        /// payer must be borrower\\n        if (borrowerToLoans[msg.sender][_id].borrower != msg.sender) {\\n            revert Unauthorized();\\n        }\\n        /// access loan in storage\\n        Loan storage targetLoan = borrowerToLoans[msg.sender][_id];\\n        /// must sent enough ETH to cover total debt\\n        if (msg.value != targetLoan.debt) {\\n            revert TotalLoanMustBePaid();\\n        }\\n        /// send due debt (with interest) to each lender\\n        for (uint256 i = 0; i < lenders.length; i++) {\\n            uint256 debtWithInterestToLender = targetLoan.lenderToDebt[\\n                lenders[i]\\n            ];\\n            if (debtWithInterestToLender != 0) {\\n                (bool success, ) = payable(lenders[i]).call{\\n                    value: debtWithInterestToLender\\n                }(\\\"\\\");\\n                require(success);\\n            }\\n        }\\n        /// delete borrower this Loan\\n        totalActiveLoanCounter--;\\n        delete borrowerToLoans[msg.sender][_id];\\n    }\\n\\n    /**\\n     * @notice allows a lender to withdraw all ETH from the contract\\n     * sends each ETH lender's balance to each lender\\n     */\\n    function withdraw() external payable onlyLender {\\n        if (address(this).balance == 0) {\\n            revert ContractBalanceIsNull();\\n        }\\n        for (uint256 i = 0; i < lenders.length; i++) {\\n            /// send each lender balance\\n            (bool success, ) = payable(lenders[i]).call{\\n                value: lenderToBalance[lenders[i]]\\n            }(\\\"\\\");\\n            require(success);\\n            /// initialize each lender's balance\\n            lenderToBalance[lenders[i]] = 0;\\n        }\\n        /// initialize lenders' array\\n        lenders = new address[](0);\\n    }\\n\\n    /**\\n     * @notice\\n     * calculates the total due debt with interest for a given borrowed amount\\n     */\\n    function calculateDebtWithInterest(uint256 _amount)\\n        internal\\n        view\\n        returns (uint256)\\n    {\\n        uint256 _interest = (_amount * i_interestRate) / 10**18;\\n        return _amount + _interest;\\n    }\\n\\n    /**\\n     * @notice\\n     * calculates the lender's amount borrowed for a given lender - total amount borrowed\\n     * calculates the lender's due debt with interest for a given lender - total amount borrowed\\n     */\\n    function calculateLenderData(\\n        address _lender,\\n        uint256 _totalAmountBorrowed, /// total Amount Borrowed in this loan\\n        uint256 _debtWithInterest /// total Amount Borrowed with interest in this loan\\n    ) internal view returns (uint256, uint256) {\\n        /// ratio of lender's balance to total contract balance\\n        uint256 fundingRatio = (lenderToBalance[_lender] * 10**2) /\\n            address(this).balance;\\n        /// lender's amount borrowed\\n        uint256 borrowedToLender = (_totalAmountBorrowed * fundingRatio) /\\n            10**2;\\n        /// lender's due debt with interest\\n        uint256 debtWithInterestToLender = (_debtWithInterest * fundingRatio) /\\n            10**2;\\n        return (borrowedToLender, debtWithInterestToLender);\\n    }\\n\\n    /**\\n     * @notice Getters\\n     * returns the number of active loans for a given borrower\\n     */\\n    function getBorrowerActiveLoansNumber(address _borrower)\\n        public\\n        view\\n        returns (uint8)\\n    {\\n        uint8 counter;\\n        for (uint8 i = 0; i < borrowerToLoans[_borrower].length; i++) {\\n            if (borrowerToLoans[_borrower][i].debt != 0) {\\n                counter++;\\n            }\\n        }\\n        return counter;\\n    }\\n\\n    /**\\n     * @notice Getters for front end\\n     * returns the total number of lenders\\n     */\\n    function getNumberOfLenders() external view returns (uint256) {\\n        return lenders.length;\\n    }\\n\\n    /**\\n     * @notice Getters for front end\\n     * returns the total due debt with interest for a given borrower - loan\\n     */\\n    function getBorrowerLoanDueDebt(address _borrower, uint256 _loanId)\\n        external\\n        view\\n        returns (uint256)\\n    {\\n        return borrowerToLoans[_borrower][_loanId].debt;\\n    }\\n\\n    /**\\n     * @notice Getters for front end\\n     * returns the lender's due debt with interest for a given borrower - loan - lender\\n     */\\n    function getBorrowerLoanDueDebtToLender(\\n        address _borrower,\\n        uint256 _loanId,\\n        address _lender\\n    ) external view returns (uint256) {\\n        return borrowerToLoans[_borrower][_loanId].lenderToDebt[_lender];\\n    }\\n}\\n\",\"keccak256\":\"0xc6cf06444fbc72c08bd5a505cd9fb34025911d46c6026d22d1b2d0943d692c39\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60c06040523480156200001157600080fd5b5060405162001c1b38038062001c1b83398181016040528101906200003791906200010a565b60008114806200004f5750670de0b6b3a76400008110155b1562000087576040517fcc687c7000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff1660a08173ffffffffffffffffffffffffffffffffffffffff16815250508060808181525050506200013c565b600080fd5b6000819050919050565b620000e481620000cf565b8114620000f057600080fd5b50565b6000815190506200010481620000d9565b92915050565b600060208284031215620001235762000122620000ca565b5b60006200013384828501620000f3565b91505092915050565b60805160a051611ab26200016960003960006112c80152600081816112ec015261131c0152611ab26000f3fe6080604052600436106100e15760003560e01c806395fab5001161007f578063d087213511610059578063d0872135146102c5578063d962403f146102e1578063dba6335f1461030c578063e32b6d8f14610337576100f0565b806395fab5001461026257806397dffc611461029f578063c5ebeaec146102a9576100f0565b80634c47b3d2116100bb5780634c47b3d21461016c5780635d995471146101a9578063604c4ec5146101e6578063929eea2114610225576100f0565b80631276cb91146100fa5780631fd225db146101375780633ccfd60b14610162576100f0565b366100f0576100ee610362565b005b6100f8610362565b005b34801561010657600080fd5b50610121600480360381019061011c9190611517565b6104a1565b60405161012e9190611560565b60405180910390f35b34801561014357600080fd5b5061014c61058d565b6040516101599190611594565b60405180910390f35b61016a610593565b005b34801561017857600080fd5b50610193600480360381019061018e9190611517565b610883565b6040516101a09190611594565b60405180910390f35b3480156101b557600080fd5b506101d060048036038101906101cb91906115db565b61089b565b6040516101dd9190611594565b60405180910390f35b3480156101f257600080fd5b5061020d6004803603810190610208919061162e565b610946565b60405161021c9392919061167d565b60405180910390f35b34801561023157600080fd5b5061024c600480360381019061024791906116b4565b6109ad565b60405161025991906116e1565b60405180910390f35b34801561026e57600080fd5b506102896004803603810190610284919061162e565b6109ec565b6040516102969190611594565b60405180910390f35b6102a7610362565b005b6102c360048036038101906102be91906116b4565b610a59565b005b6102df60048036038101906102da9190611728565b610e83565b005b3480156102ed57600080fd5b506102f66112b9565b6040516103039190611594565b60405180910390f35b34801561031857600080fd5b506103216112c6565b60405161032e9190611776565b60405180910390f35b34801561034357600080fd5b5061034c6112ea565b6040516103599190611594565b60405180910390f35b600034141561039d576040517f5725cba200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600260003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020541415610449576001339080600181540180825580915050600190039060005260206000200160009091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b34600260003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825461049891906117c0565b92505081905550565b60008060005b600360008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805490508160ff161015610583576000600360008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff168154811061054a57610549611816565b5b9060005260206000209060040201600101541461057057818061056c90611845565b9250505b808061057b90611845565b9150506104a7565b5080915050919050565b60005481565b6000600260003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054141561060d576040517f82b4290000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000471415610648576040517f78a985a600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60005b6001805490508110156108205760006001828154811061066e5761066d611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1660026000600185815481106106c7576106c6611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054604051610739906118a0565b60006040518083038185875af1925050503d8060008114610776576040519150601f19603f3d011682016040523d82523d6000602084013e61077b565b606091505b505090508061078957600080fd5b600060026000600185815481106107a3576107a2611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002081905550508080610818906118b5565b91505061064b565b50600067ffffffffffffffff81111561083c5761083b6118fe565b5b60405190808252806020026020018201604052801561086a5781602001602082028036833780820191505090505b506001908051906020019061088092919061140d565b50565b60026020528060005260406000206000915090505481565b6000600360008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002083815481106108ee576108ed611816565b5b906000526020600020906004020160030160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490509392505050565b6003602052816000526040600020818154811061096257600080fd5b9060005260206000209060040201600091509150508060000154908060010154908060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905083565b600181815481106109bd57600080fd5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000600360008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208281548110610a3f57610a3e611816565b5b906000526020600020906004020160010154905092915050565b80471015610a93576040517f247e65ad00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6002610a9e336104a1565b60ff1610610ad8576040517f2a6165f500000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000610ae38261130e565b9050600080815480929190610af7906118b5565b91905055506000600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208054905090506000600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050806001816001815401808255809150500390600052602060002090505081818381548110610bb757610bb6611816565b5b90600052602060002090600402016000018190555082818381548110610be057610bdf611816565b5b90600052602060002090600402016001018190555033818381548110610c0957610c08611816565b5b906000526020600020906004020160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060005b600180549050811015610e0557600080610cb460018481548110610c8257610c81611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168888611366565b91509150816002600060018681548110610cd157610cd0611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254610d45919061192d565b9250508190555080848681548110610d6057610d5f611816565b5b9060005260206000209060040201600301600060018681548110610d8757610d86611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555050508080610dfd906118b5565b915050610c5b565b5060003373ffffffffffffffffffffffffffffffffffffffff1685604051610e2c906118a0565b60006040518083038185875af1925050503d8060008114610e69576040519150601f19603f3d011682016040523d82523d6000602084013e610e6e565b606091505b5050905080610e7c57600080fd5b5050505050565b600181610e909190611961565b60ff16600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805490501015610f0e576040517f4c172e5200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff16600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff1681548110610f7957610f78611816565b5b906000526020600020906004020160020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614610ff8576040517f82b4290000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff168154811061104e5761104d611816565b5b906000526020600020906004020190508060010154341461109b576040517fba7d265800000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60005b600180549050811015611201576000826003016000600184815481106110c7576110c6611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050600081146111ed5760006001838154811061114d5761114c611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168260405161119b906118a0565b60006040518083038185875af1925050503d80600081146111d8576040519150601f19603f3d011682016040523d82523d6000602084013e6111dd565b606091505b50509050806111eb57600080fd5b505b5080806111f9906118b5565b91505061109e565b5060008081548092919061121490611998565b9190505550600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff168154811061126d5761126c611816565b5b906000526020600020906004020160008082016000905560018201600090556002820160006101000a81549073ffffffffffffffffffffffffffffffffffffffff021916905550505050565b6000600180549050905090565b7f000000000000000000000000000000000000000000000000000000000000000081565b7f000000000000000000000000000000000000000000000000000000000000000081565b600080670de0b6b3a76400007f00000000000000000000000000000000000000000000000000000000000000008461134691906119c2565b6113509190611a4b565b9050808361135e91906117c0565b915050919050565b6000806000476064600260008973ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020546113b891906119c2565b6113c29190611a4b565b90506000606482876113d491906119c2565b6113de9190611a4b565b90506000606483876113f091906119c2565b6113fa9190611a4b565b9050818194509450505050935093915050565b828054828255906000526020600020908101928215611486579160200282015b828111156114855782518260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055509160200191906001019061142d565b5b5090506114939190611497565b5090565b5b808211156114b0576000816000905550600101611498565b5090565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006114e4826114b9565b9050919050565b6114f4816114d9565b81146114ff57600080fd5b50565b600081359050611511816114eb565b92915050565b60006020828403121561152d5761152c6114b4565b5b600061153b84828501611502565b91505092915050565b600060ff82169050919050565b61155a81611544565b82525050565b60006020820190506115756000830184611551565b92915050565b6000819050919050565b61158e8161157b565b82525050565b60006020820190506115a96000830184611585565b92915050565b6115b88161157b565b81146115c357600080fd5b50565b6000813590506115d5816115af565b92915050565b6000806000606084860312156115f4576115f36114b4565b5b600061160286828701611502565b9350506020611613868287016115c6565b925050604061162486828701611502565b9150509250925092565b60008060408385031215611645576116446114b4565b5b600061165385828601611502565b9250506020611664858286016115c6565b9150509250929050565b611677816114d9565b82525050565b60006060820190506116926000830186611585565b61169f6020830185611585565b6116ac604083018461166e565b949350505050565b6000602082840312156116ca576116c96114b4565b5b60006116d8848285016115c6565b91505092915050565b60006020820190506116f6600083018461166e565b92915050565b61170581611544565b811461171057600080fd5b50565b600081359050611722816116fc565b92915050565b60006020828403121561173e5761173d6114b4565b5b600061174c84828501611713565b91505092915050565b6000611760826114b9565b9050919050565b61177081611755565b82525050565b600060208201905061178b6000830184611767565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60006117cb8261157b565b91506117d68361157b565b9250827fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0382111561180b5761180a611791565b5b828201905092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b600061185082611544565b915060ff82141561186457611863611791565b5b600182019050919050565b600081905092915050565b50565b600061188a60008361186f565b91506118958261187a565b600082019050919050565b60006118ab8261187d565b9150819050919050565b60006118c08261157b565b91507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8214156118f3576118f2611791565b5b600182019050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b60006119388261157b565b91506119438361157b565b92508282101561195657611955611791565b5b828203905092915050565b600061196c82611544565b915061197783611544565b92508260ff0382111561198d5761198c611791565b5b828201905092915050565b60006119a38261157b565b915060008214156119b7576119b6611791565b5b600182039050919050565b60006119cd8261157b565b91506119d88361157b565b9250817fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0483118215151615611a1157611a10611791565b5b828202905092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b6000611a568261157b565b9150611a618361157b565b925082611a7157611a70611a1c565b5b82820490509291505056fea2646970667358221220d5d9b403f2f18b2064217afeb965a1cbbb81d10bbd65fee047d93b87f5e07ddf64736f6c63430008090033",
+  "deployedBytecode": "0x6080604052600436106100e15760003560e01c806395fab5001161007f578063d087213511610059578063d0872135146102c5578063d962403f146102e1578063dba6335f1461030c578063e32b6d8f14610337576100f0565b806395fab5001461026257806397dffc611461029f578063c5ebeaec146102a9576100f0565b80634c47b3d2116100bb5780634c47b3d21461016c5780635d995471146101a9578063604c4ec5146101e6578063929eea2114610225576100f0565b80631276cb91146100fa5780631fd225db146101375780633ccfd60b14610162576100f0565b366100f0576100ee610362565b005b6100f8610362565b005b34801561010657600080fd5b50610121600480360381019061011c9190611517565b6104a1565b60405161012e9190611560565b60405180910390f35b34801561014357600080fd5b5061014c61058d565b6040516101599190611594565b60405180910390f35b61016a610593565b005b34801561017857600080fd5b50610193600480360381019061018e9190611517565b610883565b6040516101a09190611594565b60405180910390f35b3480156101b557600080fd5b506101d060048036038101906101cb91906115db565b61089b565b6040516101dd9190611594565b60405180910390f35b3480156101f257600080fd5b5061020d6004803603810190610208919061162e565b610946565b60405161021c9392919061167d565b60405180910390f35b34801561023157600080fd5b5061024c600480360381019061024791906116b4565b6109ad565b60405161025991906116e1565b60405180910390f35b34801561026e57600080fd5b506102896004803603810190610284919061162e565b6109ec565b6040516102969190611594565b60405180910390f35b6102a7610362565b005b6102c360048036038101906102be91906116b4565b610a59565b005b6102df60048036038101906102da9190611728565b610e83565b005b3480156102ed57600080fd5b506102f66112b9565b6040516103039190611594565b60405180910390f35b34801561031857600080fd5b506103216112c6565b60405161032e9190611776565b60405180910390f35b34801561034357600080fd5b5061034c6112ea565b6040516103599190611594565b60405180910390f35b600034141561039d576040517f5725cba200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600260003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020541415610449576001339080600181540180825580915050600190039060005260206000200160009091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b34600260003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825461049891906117c0565b92505081905550565b60008060005b600360008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805490508160ff161015610583576000600360008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff168154811061054a57610549611816565b5b9060005260206000209060040201600101541461057057818061056c90611845565b9250505b808061057b90611845565b9150506104a7565b5080915050919050565b60005481565b6000600260003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054141561060d576040517f82b4290000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000471415610648576040517f78a985a600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60005b6001805490508110156108205760006001828154811061066e5761066d611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1660026000600185815481106106c7576106c6611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054604051610739906118a0565b60006040518083038185875af1925050503d8060008114610776576040519150601f19603f3d011682016040523d82523d6000602084013e61077b565b606091505b505090508061078957600080fd5b600060026000600185815481106107a3576107a2611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002081905550508080610818906118b5565b91505061064b565b50600067ffffffffffffffff81111561083c5761083b6118fe565b5b60405190808252806020026020018201604052801561086a5781602001602082028036833780820191505090505b506001908051906020019061088092919061140d565b50565b60026020528060005260406000206000915090505481565b6000600360008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002083815481106108ee576108ed611816565b5b906000526020600020906004020160030160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490509392505050565b6003602052816000526040600020818154811061096257600080fd5b9060005260206000209060040201600091509150508060000154908060010154908060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905083565b600181815481106109bd57600080fd5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000600360008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208281548110610a3f57610a3e611816565b5b906000526020600020906004020160010154905092915050565b80471015610a93576040517f247e65ad00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6002610a9e336104a1565b60ff1610610ad8576040517f2a6165f500000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000610ae38261130e565b9050600080815480929190610af7906118b5565b91905055506000600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208054905090506000600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050806001816001815401808255809150500390600052602060002090505081818381548110610bb757610bb6611816565b5b90600052602060002090600402016000018190555082818381548110610be057610bdf611816565b5b90600052602060002090600402016001018190555033818381548110610c0957610c08611816565b5b906000526020600020906004020160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060005b600180549050811015610e0557600080610cb460018481548110610c8257610c81611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168888611366565b91509150816002600060018681548110610cd157610cd0611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254610d45919061192d565b9250508190555080848681548110610d6057610d5f611816565b5b9060005260206000209060040201600301600060018681548110610d8757610d86611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555050508080610dfd906118b5565b915050610c5b565b5060003373ffffffffffffffffffffffffffffffffffffffff1685604051610e2c906118a0565b60006040518083038185875af1925050503d8060008114610e69576040519150601f19603f3d011682016040523d82523d6000602084013e610e6e565b606091505b5050905080610e7c57600080fd5b5050505050565b600181610e909190611961565b60ff16600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805490501015610f0e576040517f4c172e5200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff16600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff1681548110610f7957610f78611816565b5b906000526020600020906004020160020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614610ff8576040517f82b4290000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff168154811061104e5761104d611816565b5b906000526020600020906004020190508060010154341461109b576040517fba7d265800000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60005b600180549050811015611201576000826003016000600184815481106110c7576110c6611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050600081146111ed5760006001838154811061114d5761114c611816565b5b9060005260206000200160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168260405161119b906118a0565b60006040518083038185875af1925050503d80600081146111d8576040519150601f19603f3d011682016040523d82523d6000602084013e6111dd565b606091505b50509050806111eb57600080fd5b505b5080806111f9906118b5565b91505061109e565b5060008081548092919061121490611998565b9190505550600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208260ff168154811061126d5761126c611816565b5b906000526020600020906004020160008082016000905560018201600090556002820160006101000a81549073ffffffffffffffffffffffffffffffffffffffff021916905550505050565b6000600180549050905090565b7f000000000000000000000000000000000000000000000000000000000000000081565b7f000000000000000000000000000000000000000000000000000000000000000081565b600080670de0b6b3a76400007f00000000000000000000000000000000000000000000000000000000000000008461134691906119c2565b6113509190611a4b565b9050808361135e91906117c0565b915050919050565b6000806000476064600260008973ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020546113b891906119c2565b6113c29190611a4b565b90506000606482876113d491906119c2565b6113de9190611a4b565b90506000606483876113f091906119c2565b6113fa9190611a4b565b9050818194509450505050935093915050565b828054828255906000526020600020908101928215611486579160200282015b828111156114855782518260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055509160200191906001019061142d565b5b5090506114939190611497565b5090565b5b808211156114b0576000816000905550600101611498565b5090565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006114e4826114b9565b9050919050565b6114f4816114d9565b81146114ff57600080fd5b50565b600081359050611511816114eb565b92915050565b60006020828403121561152d5761152c6114b4565b5b600061153b84828501611502565b91505092915050565b600060ff82169050919050565b61155a81611544565b82525050565b60006020820190506115756000830184611551565b92915050565b6000819050919050565b61158e8161157b565b82525050565b60006020820190506115a96000830184611585565b92915050565b6115b88161157b565b81146115c357600080fd5b50565b6000813590506115d5816115af565b92915050565b6000806000606084860312156115f4576115f36114b4565b5b600061160286828701611502565b9350506020611613868287016115c6565b925050604061162486828701611502565b9150509250925092565b60008060408385031215611645576116446114b4565b5b600061165385828601611502565b9250506020611664858286016115c6565b9150509250929050565b611677816114d9565b82525050565b60006060820190506116926000830186611585565b61169f6020830185611585565b6116ac604083018461166e565b949350505050565b6000602082840312156116ca576116c96114b4565b5b60006116d8848285016115c6565b91505092915050565b60006020820190506116f6600083018461166e565b92915050565b61170581611544565b811461171057600080fd5b50565b600081359050611722816116fc565b92915050565b60006020828403121561173e5761173d6114b4565b5b600061174c84828501611713565b91505092915050565b6000611760826114b9565b9050919050565b61177081611755565b82525050565b600060208201905061178b6000830184611767565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60006117cb8261157b565b91506117d68361157b565b9250827fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0382111561180b5761180a611791565b5b828201905092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b600061185082611544565b915060ff82141561186457611863611791565b5b600182019050919050565b600081905092915050565b50565b600061188a60008361186f565b91506118958261187a565b600082019050919050565b60006118ab8261187d565b9150819050919050565b60006118c08261157b565b91507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8214156118f3576118f2611791565b5b600182019050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b60006119388261157b565b91506119438361157b565b92508282101561195657611955611791565b5b828203905092915050565b600061196c82611544565b915061197783611544565b92508260ff0382111561198d5761198c611791565b5b828201905092915050565b60006119a38261157b565b915060008214156119b7576119b6611791565b5b600182039050919050565b60006119cd8261157b565b91506119d88361157b565b9250817fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0483118215151615611a1157611a10611791565b5b828202905092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b6000611a568261157b565b9150611a618361157b565b925082611a7157611a70611a1c565b5b82820490509291505056fea2646970667358221220d5d9b403f2f18b2064217afeb965a1cbbb81d10bbd65fee047d93b87f5e07ddf64736f6c63430008090033",
+  "devdoc": {
+    "author": "SiegfriedBz",
+    "kind": "dev",
+    "methods": {},
+    "title": "LendingBorrowing : contract for lending&borrowing ETH",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "borrow(uint256)": {
+        "notice": "borrow ETH from the contract creates a new loan calculates the total debt for this loan calculates the debt for each lender for this loan"
+      },
+      "getBorrowerActiveLoansNumber(address)": {
+        "notice": "Getters returns the number of active loans for a given borrower"
+      },
+      "getBorrowerLoanDueDebt(address,uint256)": {
+        "notice": "Getters for front end returns the total due debt with interest for a given borrower - loan"
+      },
+      "getBorrowerLoanDueDebtToLender(address,uint256,address)": {
+        "notice": "Getters for front end returns the lender's due debt with interest for a given borrower - loan - lender"
+      },
+      "getNumberOfLenders()": {
+        "notice": "Getters for front end returns the total number of lenders"
+      },
+      "lend()": {
+        "notice": "lend ETH to the contract"
+      },
+      "payloan(uint8)": {
+        "notice": "repay a loan : send ETH due debt to each lender"
+      },
+      "withdraw()": {
+        "notice": "allows a lender to withdraw all ETH from the contract sends each ETH lender's balance to each lender"
+      }
+    },
+    "notice": "This contract allows lenders to receive interests on loans, as a function of each lender balance/contract balance at the time a loan is createdThis contract allows borrowers to create a max of 2 active loans at a given time",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 22,
+        "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+        "label": "totalActiveLoanCounter",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 27,
+        "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+        "label": "lenders",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_array(t_address)dyn_storage"
+      },
+      {
+        "astId": 31,
+        "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+        "label": "lenderToBalance",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 37,
+        "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+        "label": "borrowerToLoans",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_address,t_array(t_struct(Loan)48_storage)dyn_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_address)dyn_storage": {
+        "base": "t_address",
+        "encoding": "dynamic_array",
+        "label": "address[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_struct(Loan)48_storage)dyn_storage": {
+        "base": "t_struct(Loan)48_storage",
+        "encoding": "dynamic_array",
+        "label": "struct LendingBorrowing.Loan[]",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_array(t_struct(Loan)48_storage)dyn_storage)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => struct LendingBorrowing.Loan[])",
+        "numberOfBytes": "32",
+        "value": "t_array(t_struct(Loan)48_storage)dyn_storage"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_struct(Loan)48_storage": {
+        "encoding": "inplace",
+        "label": "struct LendingBorrowing.Loan",
+        "members": [
+          {
+            "astId": 39,
+            "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+            "label": "id",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 41,
+            "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+            "label": "debt",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 43,
+            "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+            "label": "borrower",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address"
+          },
+          {
+            "astId": 47,
+            "contract": "contracts/LendingBorrowing.sol:LendingBorrowing",
+            "label": "lenderToDebt",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)"
+          }
+        ],
+        "numberOfBytes": "128"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
