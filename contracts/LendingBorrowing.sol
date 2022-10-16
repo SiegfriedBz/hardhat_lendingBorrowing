@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-error InterestRateOutOfRange();
 error Unauthorized();
-error NotEnoughFunds();
+error InterestRateOutOfRange();
 error AmountSentCanNotBeNull();
+error NotEnoughFundsInContract();
 error Max2LoansAllowed();
 error LoanMustExist();
 error TotalLoanMustBePaid();
+error ContractBalanceIsNull();
 
-/** @title LendingBorrowing : contract for lending&borrowing ETH.
+/** @title LendingBorrowing : contract for lending&borrowing ETH
  *  @author SiegfriedBz
- *  @notice This contract allows lenders to receive interests on loans, as a function of each lender balance at the time a loan is created.
- *  @notice This contract allows borrowers to create a max of 2 active loans at a given time.
+ *  @notice This contract allows lenders to receive interests on loans, as a function of each lender balance/contract balance at the time a loan is created
+ *  @notice This contract allows borrowers to create a max of 2 active loans at a given time
  */
 contract LendingBorrowing {
     uint256 public immutable i_interestRate;
-    uint256 public activeLoanCounter;
+    uint256 public totalActiveLoanCounter;
     address payable public immutable i_owner;
     address[] public lenders;
     mapping(address => uint256) public lenderToBalance;
     mapping(address => Loan[]) public borrowerToLoans;
-
     struct Loan {
         uint256 id;
-        uint256 debt; // w/ interest
+        uint256 debt; // with interest
         address borrower;
-        mapping(address => uint256) lenderToDebt; // due debt w/interest for each lender
+        mapping(address => uint256) lenderToDebt; // due debt with interest for each lender
     }
 
     modifier onlyLender() {
@@ -38,13 +38,14 @@ contract LendingBorrowing {
 
     constructor(uint256 _interestRate) {
         if (_interestRate == 0 || _interestRate >= 10**18) {
-            // interestRate must be ]0,1[
+            /// interestRate must be ]0,1[
             revert InterestRateOutOfRange();
         }
         i_owner = payable(msg.sender);
         i_interestRate = _interestRate;
     }
 
+    /// fallback functions
     receive() external payable {
         lend();
     }
@@ -53,122 +54,160 @@ contract LendingBorrowing {
         lend();
     }
 
-    function lend() public payable {
+    /**
+     * @notice lend ETH to the contract
+     */
+    function lend() external payable {
         if (msg.value == 0) {
             revert AmountSentCanNotBeNull();
         }
+        /// add new lender if not already in lenders array
         if (lenderToBalance[msg.sender] == 0) {
-            // create new lender
             lenders.push(msg.sender);
         }
-        // update lender's balance
+        /// update lender's balance
         lenderToBalance[msg.sender] += msg.value;
     }
 
-    function borrow(uint256 _amount) public payable {
-        // revert if not enough ETH on contract
+    /**
+     * @notice borrow ETH from the contract
+     * creates a new loan
+     * calculates the total debt for this loan
+     * calculates the debt for each lender for this loan
+     */
+    function borrow(uint256 _amount) external payable {
+        /// revert if not enough ETH on contract
         if (address(this).balance < _amount) {
-            revert NotEnoughFunds();
+            revert NotEnoughFundsInContract();
         }
-        // revert if borrower has already 2 loans
+        /// revert if borrower has already 2 loans
         if (getBorrowerActiveLoansNumber(msg.sender) >= 2) {
             revert Max2LoansAllowed();
         }
-        // calculate debt with interest
-        uint256 totalDebt = calculateTotalDebt(_amount);
-        // create Loan
-        activeLoanCounter++;
-        uint256 borrowerLoansCounter = borrowerToLoans[msg.sender].length;
+        /// calculate debt with interest for this amount
+        uint256 debtWithInterest = calculateDebtWithInterest(_amount);
+        /// create Loan
+        totalActiveLoanCounter++;
+        uint256 borrowerLoanIndex = borrowerToLoans[msg.sender].length;
         Loan[] storage borrowerLoans = borrowerToLoans[msg.sender];
         borrowerLoans.push();
-        borrowerLoans[borrowerLoansCounter].id = borrowerLoansCounter;
-        borrowerLoans[borrowerLoansCounter].debt = totalDebt;
-        borrowerLoans[borrowerLoansCounter].borrower = msg.sender;
-        // update lenders' data
+        /// update Loan
+        borrowerLoans[borrowerLoanIndex].id = borrowerLoanIndex;
+        borrowerLoans[borrowerLoanIndex].debt = debtWithInterest;
+        borrowerLoans[borrowerLoanIndex].borrower = msg.sender;
+        /// update each lender's data
         for (uint256 i = 0; i < lenders.length; i++) {
             (
-                uint256 debtToLender,
+                uint256 borrowedToLender,
                 uint256 debtWithInterestToLender
-            ) = calculateLenderData(lenders[i], _amount, totalDebt);
-            lenderToBalance[lenders[i]] -= debtToLender;
-            borrowerLoans[borrowerLoansCounter].lenderToDebt[
+            ) = calculateLenderData(lenders[i], _amount, debtWithInterest);
+            /// update each lender's balance
+            lenderToBalance[lenders[i]] -= borrowedToLender;
+            /// update borrower's debt (with interest) to each lender
+            borrowerLoans[borrowerLoanIndex].lenderToDebt[
                     lenders[i]
                 ] = debtWithInterestToLender;
         }
-        // send ETH to borrower
+        /// send ETH to borrower
         (bool success, ) = payable(msg.sender).call{value: _amount}("");
         require(success);
     }
 
-    function payloan(uint8 _id) public payable {
-        // loan must exist
+    /**
+     * @notice repay a loan : send ETH due debt to each lender
+     */
+    function payloan(uint8 _id) external payable {
+        /// loan must exist
         if (borrowerToLoans[msg.sender].length < _id + 1) {
             revert LoanMustExist();
         }
-        // must sent enough ETH to cover total debt
+        /// payer must be borrower
+        if (borrowerToLoans[msg.sender][_id].borrower != msg.sender) {
+            revert Unauthorized();
+        }
+        /// access loan in storage
         Loan storage targetLoan = borrowerToLoans[msg.sender][_id];
+        /// must sent enough ETH to cover total debt
         if (msg.value != targetLoan.debt) {
             revert TotalLoanMustBePaid();
         }
-        // send due debt to each lender
+        /// send due debt (with interest) to each lender
         for (uint256 i = 0; i < lenders.length; i++) {
-            uint256 dueDebt = targetLoan.lenderToDebt[lenders[i]];
-            if (dueDebt != 0) {
-                (bool success, ) = payable(lenders[i]).call{value: dueDebt}("");
+            uint256 debtWithInterestToLender = targetLoan.lenderToDebt[
+                lenders[i]
+            ];
+            if (debtWithInterestToLender != 0) {
+                (bool success, ) = payable(lenders[i]).call{
+                    value: debtWithInterestToLender
+                }("");
                 require(success);
             }
         }
-        // delete borrower this Loan
-        activeLoanCounter--;
+        /// delete borrower this Loan
+        totalActiveLoanCounter--;
         delete borrowerToLoans[msg.sender][_id];
     }
 
+    /**
+     * @notice allows a lender to withdraw all ETH from the contract
+     * sends each ETH lender's balance to each lender
+     */
     function withdraw() external payable onlyLender {
         if (address(this).balance == 0) {
-            revert NotEnoughFunds();
+            revert ContractBalanceIsNull();
         }
         for (uint256 i = 0; i < lenders.length; i++) {
-            // send each lender balance
+            /// send each lender balance
             (bool success, ) = payable(lenders[i]).call{
                 value: lenderToBalance[lenders[i]]
             }("");
-            // initialize each lender's balance
-            lenderToBalance[lenders[i]] = 0;
             require(success);
+            /// initialize each lender's balance
+            lenderToBalance[lenders[i]] = 0;
         }
-        // initialize lenders' array
+        /// initialize lenders' array
         lenders = new address[](0);
     }
 
-    function calculateTotalDebt(uint256 _totalAmountBorrowed)
-        public
+    /**
+     * @notice
+     * calculates the total due debt with interest for a given borrowed amount
+     */
+    function calculateDebtWithInterest(uint256 _amount)
+        internal
         view
         returns (uint256)
     {
-        uint256 _interest = (_totalAmountBorrowed * i_interestRate) / 10**18;
-        return _totalAmountBorrowed + _interest;
+        uint256 _interest = (_amount * i_interestRate) / 10**18;
+        return _amount + _interest;
     }
 
+    /**
+     * @notice
+     * calculates the lender's amount borrowed for a given lender - total amount borrowed
+     * calculates the lender's due debt with interest for a given lender - total amount borrowed
+     */
     function calculateLenderData(
         address _lender,
-        uint256 _totalAmountBorrowed,
-        uint256 _totalDebt
+        uint256 _totalAmountBorrowed, /// total Amount Borrowed in this loan
+        uint256 _debtWithInterest /// total Amount Borrowed with interest in this loan
     ) internal view returns (uint256, uint256) {
+        /// ratio of lender's balance to total contract balance
         uint256 fundingRatio = (lenderToBalance[_lender] * 10**2) /
             address(this).balance;
-        uint256 debtToLender = (_totalAmountBorrowed * fundingRatio) / 10**2;
-        uint256 debtWithInterestToLender = (_totalDebt * fundingRatio) / 10**2;
-        return (debtToLender, debtWithInterestToLender);
+        /// lender's amount borrowed
+        uint256 borrowedToLender = (_totalAmountBorrowed * fundingRatio) /
+            10**2;
+        /// lender's due debt with interest
+        uint256 debtWithInterestToLender = (_debtWithInterest * fundingRatio) /
+            10**2;
+        return (borrowedToLender, debtWithInterestToLender);
     }
 
-    function getBorrowerLoanDueDebt(address _borrower, uint256 _loanId)
-        public
-        view
-        returns (uint256)
-    {
-        return borrowerToLoans[_borrower][_loanId].debt;
-    }
-
+    /**
+     * @notice Getters
+     * returns the number of active loans for a given borrower
+     */
     function getBorrowerActiveLoansNumber(address _borrower)
         public
         view
@@ -183,7 +222,35 @@ contract LendingBorrowing {
         return counter;
     }
 
+    /**
+     * @notice Getters for front end
+     * returns the total number of lenders
+     */
     function getNumberOfLenders() external view returns (uint256) {
         return lenders.length;
+    }
+
+    /**
+     * @notice Getters for front end
+     * returns the total due debt with interest for a given borrower - loan
+     */
+    function getBorrowerLoanDueDebt(address _borrower, uint256 _loanId)
+        external
+        view
+        returns (uint256)
+    {
+        return borrowerToLoans[_borrower][_loanId].debt;
+    }
+
+    /**
+     * @notice Getters for front end
+     * returns the lender's due debt with interest for a given borrower - loan - lender
+     */
+    function getBorrowerLoanDueDebtToLender(
+        address _borrower,
+        uint256 _loanId,
+        address _lender
+    ) external view returns (uint256) {
+        return borrowerToLoans[_borrower][_loanId].lenderToDebt[_lender];
     }
 }
