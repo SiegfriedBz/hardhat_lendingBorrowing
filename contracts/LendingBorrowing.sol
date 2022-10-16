@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "hardhat/console.sol";
+
 error Unauthorized();
 error InterestRateOutOfRange();
-error AmountSentCanNotBeNull();
+error AmountCanNotBeNull();
 error NotEnoughFundsInContract();
 error Max2LoansAllowed();
 error LoanMustExist();
@@ -58,8 +60,9 @@ contract LendingBorrowing {
      * @notice lend ETH to the contract
      */
     function lend() public payable {
+        /// revert if value sent is null
         if (msg.value == 0) {
-            revert AmountSentCanNotBeNull();
+            revert AmountCanNotBeNull();
         }
         /// add new lender if not already in lenders array
         if (lenderToBalance[msg.sender] == 0) {
@@ -76,6 +79,10 @@ contract LendingBorrowing {
      * calculates the debt for each lender for this loan
      */
     function borrow(uint256 _amount) external payable {
+        /// revert if amount is null
+        if (_amount == 0) {
+            revert AmountCanNotBeNull();
+        }
         /// revert if not enough ETH on contract
         if (address(this).balance < _amount) {
             revert NotEnoughFundsInContract();
@@ -192,15 +199,12 @@ contract LendingBorrowing {
         uint256 _totalAmountBorrowed, /// total Amount Borrowed in this loan
         uint256 _debtWithInterest /// total Amount Borrowed with interest in this loan
     ) internal view returns (uint256, uint256) {
-        /// ratio of lender's balance to total contract balance
-        uint256 fundingRatio = (lenderToBalance[_lender] * 10**2) /
-            address(this).balance;
-        /// lender's amount borrowed
-        uint256 borrowedToLender = (_totalAmountBorrowed * fundingRatio) /
-            10**2;
-        /// lender's due debt with interest
-        uint256 debtWithInterestToLender = (_debtWithInterest * fundingRatio) /
-            10**2;
+        /// lender's amount borrowed : based on ratio of lender's balance to total contract balance
+        uint256 borrowedToLender = (_totalAmountBorrowed *
+            lenderToBalance[_lender]) / address(this).balance;
+        /// lender's due debt with interest : based on ratio of lender's balance to total contract balance
+        uint256 debtWithInterestToLender = (_debtWithInterest *
+            lenderToBalance[_lender]) / address(this).balance;
         return (borrowedToLender, debtWithInterestToLender);
     }
 
