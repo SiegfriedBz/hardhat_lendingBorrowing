@@ -1,4 +1,4 @@
-# lendingBorrowing Project
+# Lending&Borrowing Project
 
 Try running some of the following tasks:
 
