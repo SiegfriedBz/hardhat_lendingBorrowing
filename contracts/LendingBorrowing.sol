@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "hardhat/console.sol";
-
 error Unauthorized();
 error InterestRateOutOfRange();
 error AmountCanNotBeNull();
 error NotEnoughFundsInContract();
 error Max2LoansAllowed();
 error LoanMustExist();
-error TotalLoanMustBePaid();
-error ContractBalanceIsNull();
+error ExactDebtMustBePaid();
 
 /** @title LendingBorrowing : contract for lending&borrowing ETH
  *  @author SiegfriedBz
@@ -136,7 +133,7 @@ contract LendingBorrowing {
         Loan storage targetLoan = borrowerToLoans[msg.sender][_id];
         /// must sent enough ETH to cover total debt
         if (msg.value != targetLoan.debt) {
-            revert TotalLoanMustBePaid();
+            revert ExactDebtMustBePaid();
         }
         /// send due debt (with interest) to each lender
         for (uint256 i = 0; i < lenders.length; i++) {
@@ -161,7 +158,7 @@ contract LendingBorrowing {
      */
     function withdraw() external payable onlyLender {
         if (address(this).balance == 0) {
-            revert ContractBalanceIsNull();
+            revert Unauthorized();
         }
         for (uint256 i = 0; i < lenders.length; i++) {
             /// send each lender balance
