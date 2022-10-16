@@ -57,7 +57,7 @@ contract LendingBorrowing {
     /**
      * @notice lend ETH to the contract
      */
-    function lend() external payable {
+    function lend() public payable {
         if (msg.value == 0) {
             revert AmountSentCanNotBeNull();
         }
